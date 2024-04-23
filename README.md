@@ -9,3 +9,4 @@
 26.02.2024 - [feature/hw-02-annotation-config] - Домашнее задание №2 к занятию "Конфигурирование Spring-приложений"  
 18.03.2024 - [feature/hw-03-spring-boot] - Домашнее задание №3 к занятию "Чёрная магия" Spring Boot  
 15.04.2024 - [feature/hw-04-spring-shell] -Домашнее задание №4 к занятию "Продвинутая конфигурация (часть 2) - Conditionals, Events, тестирование"  
+23.04.2024 - [feature/hw-05-spring-jdbc] - Домашнее задание №5 к занятию "DAO на Spring JDBC"  
