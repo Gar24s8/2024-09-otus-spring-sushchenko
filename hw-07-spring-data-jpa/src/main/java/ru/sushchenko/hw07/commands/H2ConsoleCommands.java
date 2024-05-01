@@ -1,11 +1,13 @@
 package ru.sushchenko.hw07.commands;
 
+import lombok.RequiredArgsConstructor;
 import org.h2.tools.Console;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 import java.sql.SQLException;
 
+@RequiredArgsConstructor
 @ShellComponent
 public class H2ConsoleCommands {
 
