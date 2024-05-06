@@ -11,7 +11,6 @@
         <relativePath/>
     </parent>
 
-
     <groupId>ru.otus.sushchenko</groupId>
     <artifactId>homeworks</artifactId>
     <packaging>pom</packaging>
@@ -22,6 +21,7 @@
         <module>hw-03-spring-boot</module>
         <module>hw-04-spring-shell</module>
         <module>hw-05-spring-jdbc</module>
+        <module>hw-08-spring-mongo-db</module>
     </modules>
 
     <properties>
