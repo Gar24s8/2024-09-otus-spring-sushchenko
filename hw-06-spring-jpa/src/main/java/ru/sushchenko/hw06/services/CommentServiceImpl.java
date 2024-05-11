@@ -42,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public Comment update(long id, String commentText, long bookId) {
+    public Comment update(long id, String commentText) {
         var comment = commentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("not found comment with id = %d".formatted(id)));
         comment.setCommentText(commentText);

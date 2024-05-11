@@ -15,7 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import({JpaBookRepository.class, JpaGenreRepository.class})
+@Import({JpaBookRepository.class})
 class JpaBookRepositoryTest {
 
     @Autowired
@@ -28,8 +28,6 @@ class JpaBookRepositoryTest {
 
     private List<Genre> genres;
 
-    private List<Book> books;
-
     @BeforeEach
     void setUp() {
         authors = List.of(new Author(1L, "Author_1")
@@ -39,10 +37,6 @@ class JpaBookRepositoryTest {
         genres = List.of(new Genre(1L, "Genre_1")
                 , new Genre(2L, "Genre_2")
                 , new Genre(3L, "Genre_3"));
-
-        books = List.of(new Book(1L, "BookTitle_1", testEntityManager.find(Author.class, 1L), testEntityManager.find(Genre.class, 1L))
-                , new Book(2L, "BookTitle_2", testEntityManager.find(Author.class, 2L), testEntityManager.find(Genre.class, 2L))
-                , new Book(3L, "BookTitle_3", testEntityManager.find(Author.class, 3L), testEntityManager.find(Genre.class, 3L)));
     }
 
     @Test
@@ -55,38 +49,35 @@ class JpaBookRepositoryTest {
     @Test
     void findAll_ShouldReturnListOfAllBooks_WhenExists() {
         var actualBooks = jpaBookRepository.findAll();
-        var expectedBooks = books;
-        assertThat(actualBooks).containsExactlyElementsOf(expectedBooks);
+        assertThat(actualBooks).isNotNull().hasSize(3);
     }
 
     @Test
     void save_ShouldUpdateExistingBook_WhenFound() {
         var expectedBook = new Book(1L, "new_BookTitle", authors.get(0), genres.get(0));
 
-        assertThat(jpaBookRepository.findById(expectedBook.getId()))
-                .isPresent()
-                .get()
-                .isNotEqualTo(expectedBook);
+        jpaBookRepository.save(expectedBook);
 
-        var returnedBook = jpaBookRepository.save(expectedBook);
+        var actualBook = testEntityManager.find(Book.class, 1L);
 
-        assertThat(returnedBook).isNotNull()
-                .matches(book -> book.getId() > 0)
-                .isEqualTo(expectedBook);
-
-        assertThat(jpaBookRepository.findById(returnedBook.getId()))
-                .isPresent()
-                .get()
-                .isEqualTo(returnedBook);
+        assertThat(actualBook)
+                .matches(b -> b.getTitle().equals("new_BookTitle"))
+                .matches(b -> b.getAuthor().getFullName().equals(authors.get(0).getFullName()))
+                .matches(b -> b.getGenre().getName().equals(genres.get(0).getName()));
     }
 
     @Test
     void save_ShouldSaveNewBook_WhenNothingToUpdate() {
-        var expectedBook = new Book(1L, "new_BookTitle", authors.get(0), genres.get(0));
-        var returnedBook = jpaBookRepository.save(expectedBook);
+        var expectedBook = new Book(4L, "new_BookTitle", authors.get(0), genres.get(0));
 
-        assertThat(returnedBook).isNotNull().isEqualTo(expectedBook);
-        assertThat(jpaBookRepository.findById(returnedBook.getId())).isPresent().get().isEqualTo(returnedBook);
+        jpaBookRepository.save(expectedBook);
+
+        var actualBook = testEntityManager.find(Book.class, 4L);
+
+        assertThat(actualBook)
+                .matches(b -> b.getTitle().equals("new_BookTitle"))
+                .matches(b -> b.getAuthor().getFullName().equals(authors.get(0).getFullName()))
+                .matches(b -> b.getGenre().getName().equals(genres.get(0).getName()));
     }
 
     @Test

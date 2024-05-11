@@ -48,7 +48,9 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        Optional<Book> book = findById(id);
-        book.ifPresent(entityManager::remove);
+        var book = entityManager.find(Book.class, id);
+        if (book != null) {
+            entityManager.remove(book);
+        }
     }
 }
