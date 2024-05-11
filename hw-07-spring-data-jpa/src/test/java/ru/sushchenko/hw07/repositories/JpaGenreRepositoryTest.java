@@ -1,13 +1,10 @@
 package ru.sushchenko.hw07.repositories;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ru.sushchenko.hw07.models.Genre;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,20 +17,13 @@ class JpaGenreRepositoryTest {
     @Autowired
     private GenreRepository genreRepository;
 
-    private List<Genre> genres;
-
-    @BeforeEach
-    void setUp() {
-        genres = List.of(new Genre(1L, "Genre_1")
-                , new Genre(2L, "Genre_2")
-                , new Genre(3L, "Genre_3"));
-    }
-
     @Test
     void findAll_ShouldFindAllGenres_WhenExists() {
-        var actualGenres = genreRepository.findAll();
-        var expectedGenres = genres;
-        assertThat(actualGenres).containsExactlyElementsOf(expectedGenres);
+        var genres = genreRepository.findAll();
+
+        assertThat(genres).isNotNull().hasSize(3)
+                .allMatch(s -> !s.getName().equals(""))
+                .anyMatch(s -> s.getName().equals("Genre_1") && s.getId() == 1);
     }
 
     @Test

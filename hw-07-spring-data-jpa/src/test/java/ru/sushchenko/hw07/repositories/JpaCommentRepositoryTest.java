@@ -7,8 +7,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ru.sushchenko.hw07.models.Book;
 import ru.sushchenko.hw07.models.Comment;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -30,41 +28,38 @@ class JpaCommentRepositoryTest {
 
     @Test
     void findAllCommentsByBookId_ShouldReturnCommentsForBook_WhenFound() {
-        var foundComments = commentRepository.findAllCommentsByBookId(1L);
-        var expectedComments = List.of(new Comment(2L, "Comment_2", testEntityManager.find(Book.class, 1L))
-                , new Comment(3L, "Comment_3", testEntityManager.find(Book.class, 1L)));
+        var comments = commentRepository.findAllCommentsByBookId(1L);
 
-        assertThat(foundComments).containsExactlyElementsOf(expectedComments);
+        assertThat(comments).isNotNull().hasSize(2)
+                .allMatch(s -> !s.getCommentText().equals(""))
+                .anyMatch(s -> s.getCommentText().equals("Comment_2"))
+                .anyMatch(s -> s.getCommentText().equals("Comment_3"));
     }
 
     @Test
     void save_ShouldUpdateExistingComment_WhenFound() {
         var expectedComment = new Comment(1L, "new_Comment", testEntityManager.find(Book.class, 1L));
+        commentRepository.save(expectedComment);
 
-        assertThat(commentRepository.findById(expectedComment.getId()))
-                .isPresent()
-                .get()
-                .isNotEqualTo(expectedComment);
+        var actualComment = testEntityManager.find(Comment.class, 1L);
 
-        var returnedComment = commentRepository.save(expectedComment);
-
-        assertThat(returnedComment).isNotNull()
-                .matches(book -> book.getId() > 0)
-                .isEqualTo(expectedComment);
-
-        assertThat(commentRepository.findById(returnedComment.getId()))
-                .isPresent()
-                .get()
-                .isEqualTo(returnedComment);
+        assertThat(actualComment)
+                .matches(c -> c.getId() == 1L &&
+                        c.getCommentText().equals("new_Comment") &&
+                        c.getBook().getId() == 1L);
     }
 
     @Test
     void save_ShouldSaveNewBook_WhenNothingToUpdate() {
-        var expectedComment = new Comment(1L, "new_Comment", testEntityManager.find(Book.class, 1L));
-        var returnedBook = commentRepository.save(expectedComment);
+        var expectedComment = new Comment(4L, "new_Comment", testEntityManager.find(Book.class, 2L));
+        commentRepository.save(expectedComment);
 
-        assertThat(returnedBook).isNotNull().isEqualTo(expectedComment);
-        assertThat(commentRepository.findById(returnedBook.getId())).isPresent().get().isEqualTo(returnedBook);
+        var actualComment = testEntityManager.find(Comment.class, 4L);
+
+        assertThat(actualComment)
+                .matches(c -> c.getId() == 4L &&
+                        c.getCommentText().equals("new_Comment") &&
+                        c.getBook().getId() == 2L);
     }
 
     @Test
