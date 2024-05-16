@@ -20,6 +20,6 @@ public class Comment {
     @Field(name = "commentText")
     private String commentText;
 
-    @DBRef
+    @DBRef(lazy = true)
     private Book book;
 }

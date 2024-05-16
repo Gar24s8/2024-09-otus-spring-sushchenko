@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import ru.sushchenko.hw08.models.Author;
 import ru.sushchenko.hw08.models.Book;
+import ru.sushchenko.hw08.models.Comment;
 import ru.sushchenko.hw08.models.Genre;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,17 +19,24 @@ class BookRepositoryTest {
     BookRepository bookRepository;
 
     @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
     MongoTemplate mongoTemplate;
 
     @BeforeEach
     public void init() {
         final var tolkien = new Author("1", "J.R.R. Tolkien");
         final var fantasy = new Genre("1", "Fantasy");
-        mongoTemplate.save(new Book("1", "The Silmarrilion", tolkien, fantasy));
+        var silmarillion = new Book("1", "The Silmarrilion", tolkien, fantasy);
+        var comment = new Comment("1", "The best book!", silmarillion);
+        commentRepository.save(comment);
+        mongoTemplate.save(silmarillion);
 
         final var keyes = new Author("2", "D. Keyes");
         final var sciFi = new Genre("2", "Sci-Fi Novel");
-        mongoTemplate.save(new Book("2", "Flowers for Algernon", keyes, sciFi));
+        var algernon = new Book("2", "Flowers for Algernon", keyes, sciFi);
+        mongoTemplate.save(algernon);
     }
 
     @Test
@@ -72,6 +80,18 @@ class BookRepositoryTest {
         var foundBook = mongoTemplate.findById(returnedBook.getId(), Book.class);
 
         assertThat(foundBook).isEqualTo(returnedBook);
+    }
+
+    @Test
+    void delete_ShouldDeleteBook() {
+        assertThat(bookRepository.findById("1")).isPresent();
+        assertThat(commentRepository.findByBookId("1")).hasSize(1);
+
+        bookRepository.deleteById("1");
+        commentRepository.deleteByBookId("1");
+
+        assertThat(bookRepository.findById("1")).isEmpty();
+        assertThat(commentRepository.findByBookId("1")).isEmpty();
     }
 
 }

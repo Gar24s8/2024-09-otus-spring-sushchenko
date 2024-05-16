@@ -7,6 +7,7 @@ import ru.sushchenko.hw08.exceptions.EntityNotFoundException;
 import ru.sushchenko.hw08.models.Book;
 import ru.sushchenko.hw08.repositories.AuthorRepository;
 import ru.sushchenko.hw08.repositories.BookRepository;
+import ru.sushchenko.hw08.repositories.CommentRepository;
 import ru.sushchenko.hw08.repositories.GenreRepository;
 
 import java.util.List;
@@ -22,14 +23,16 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
+    private final CommentRepository commentRepository;
+
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<Book> findById(String id) {
         return bookRepository.findById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Book> findAll() {
         return bookRepository.findAll();
     }
@@ -48,13 +51,15 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book update(String id, String title, String authorId, String genreId) {
-        bookRepository.findById(id)
+        var book = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %s not found".formatted(id)));
         var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new EntityNotFoundException("Author with id %s not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)
                 .orElseThrow(() -> new EntityNotFoundException("Genre with id %s not found".formatted(genreId)));
-        var book = new Book(id, title, author, genre);
+        book.setTitle(title);
+        book.setAuthor(author);
+        book.setGenre(genre);
         return bookRepository.save(book);
     }
 
