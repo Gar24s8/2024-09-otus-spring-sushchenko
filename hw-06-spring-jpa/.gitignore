@@ -6,7 +6,6 @@ target/
 mvnw
 mvnw.cmd
 .mvn
-spring-shell.log
 ### STS ###
 .apt_generated
 .classpath
