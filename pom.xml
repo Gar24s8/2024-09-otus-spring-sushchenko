@@ -22,7 +22,7 @@
         <module>hw-03-spring-boot</module>
         <module>hw-04-spring-shell</module>
         <module>hw-05-spring-jdbc</module>
-        <module>hw-07-spring-data-jpa</module>
+        <module>hw-06-spring-jpa</module>
     </modules>
 
     <properties>
