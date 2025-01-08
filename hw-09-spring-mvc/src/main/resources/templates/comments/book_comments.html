@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Comments</title>
+</head>
+<body>
+
+<h3>Book:</h3>
+<div th:object="${book}">
+    <table>
+        <tbody>
+        <tr class="row">
+            <td>
+                <label for="book-title">Title:</label>
+            </td>
+            <td>
+                <input id="book-title" type="text" readonly="readonly" value="War and Piece" th:value="*{title}"/>
+            </td>
+        </tr>
+        <tr class="row">
+            <td>
+                <label for="book-author">Author:</label>
+            </td>
+            <td>
+                <input id="book-author" type="text" readonly="readonly" value="L.N. Tolstoy"
+                       th:value="*{author.fullName}"/>
+            </td>
+        </tr>
+        <tr class="row">
+            <td>
+                <label for="book-genre">Genre:</label>
+            </td>
+            <td>
+                <input id="book-genre" type="text" readonly="readonly" value="Classic" th:value="*{genre.name}"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Comments:</h3>
+    <table class="comments">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="comment : ${comments}" th:object="${comment}">
+            <td th:text="${comment.id}">1</td>
+            <td th:text="${comment.commentText}">Text</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="padding-top">
+        <a href="../books/all_books.html" th:href="@{/}">
+            <button type="button">Back to books</button>
+        </a>
+    </div>
+</body>
+</html>

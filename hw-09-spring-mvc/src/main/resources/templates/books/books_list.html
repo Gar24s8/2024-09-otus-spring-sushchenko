@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Books</title>
+
+<body>
+<h3>Books:</h3>
+<a th:href="@{/book}">
+    <button class="margin_bottom" type="button">Add new book</button>
+</a>
+<table class="books">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genre</th>
+        <th>Comments</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}" th:object="${book}">
+        <form id="delete-book" action="all_books.html" th:method="post"
+              th:action="@{/delete(id=${book.id})}">
+            <td th:text="*{title}">Book Title</td>
+            <td th:text="*{author.fullName}">Author name</td>
+            <td th:text="*{genre.name}">Genre name</td>
+            <td>
+                <a href="comments/book_comments.html"
+                   th:href="@{'/book/' + ${book.id} + '/comments'}">Show comments</a>
+            </td>
+            <td>
+                <a href="edit_book.html" th:href="@{/book/{id}(id=*{id})}">
+                    <button type="button">Edit</button>
+                </a>
+                <button type="submit">Delete</button>
+            </td>
+        </form>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

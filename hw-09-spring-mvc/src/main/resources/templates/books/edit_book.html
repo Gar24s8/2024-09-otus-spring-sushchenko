@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+</head>
+<body>
+
+<form id="edit-form" action="books/edit_book.html"
+      th:action="@{'/book/' + ${book.id}}"
+
+      th:method="post" th:object="${book}">
+
+    <h3>Book Info:</h3>
+
+    <div class="row">
+        <label for="book-title-input">Title:</label>
+        <input id="book-title-input" name="title" type="text" value="Book title" th:value="*{title}"/>
+        <div class="errors" th:if="${#fields.hasErrors('title')}"
+             th:errors="*{title}">Ошибка заполнения поля</div>
+    </div>
+
+    <div class="row">
+        <label for="author-select">Author:</label>
+        <select id="author-select" th:field="*{authorId}">
+            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.fullName}"
+                    th:selected="*{authorId}"/>
+        </select>
+        <div class="errors" th:if="${#fields.hasErrors('authorId')}"
+             th:errors="*{authorId}">Ошибка заполнения поля</div>
+    </div>
+
+    <div class="row">
+        <label for="genre-select">Genre:</label>
+        <select id="genre-select" th:field="*{genreId}">
+            <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}"
+                    th:selected="*{genreId}"/>
+        </select>
+        <div class="errors" th:if="${#fields.hasErrors('genreId')}"
+             th:errors="*{genreId}">Ошибка заполнения поля</div>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+        <a href="books_list.html" th:href="@{/}">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+</form>
+
+
+
+</body>
+</html>

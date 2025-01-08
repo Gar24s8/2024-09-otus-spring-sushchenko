@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Genres</title>
+</head>
+<body>
+<h3>Genres:</h3>
+
+<table class="genres">
+    <thead>
+    <tr>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="genre : ${genres}" th:object="${genre}">
+        <td th:text="*{name}">Sci Fi</td>
+    </tr>
+    </tbody>
+</table>
+<div class="padding-top">
+    <a href="../books/books_list.html" th:href="@{/}">
+        <button type="button">Back to books</button>
+    </a>
+</div>
+</body>
+</html>
