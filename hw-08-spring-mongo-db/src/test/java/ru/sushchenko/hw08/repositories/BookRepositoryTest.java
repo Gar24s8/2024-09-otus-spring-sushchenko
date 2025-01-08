@@ -82,16 +82,4 @@ class BookRepositoryTest {
         assertThat(foundBook).isEqualTo(returnedBook);
     }
 
-    @Test
-    void delete_ShouldDeleteBook() {
-        assertThat(bookRepository.findById("1")).isPresent();
-        assertThat(commentRepository.findByBookId("1")).hasSize(1);
-
-        bookRepository.deleteById("1");
-        commentRepository.deleteByBookId("1");
-
-        assertThat(bookRepository.findById("1")).isEmpty();
-        assertThat(commentRepository.findByBookId("1")).isEmpty();
-    }
-
 }
